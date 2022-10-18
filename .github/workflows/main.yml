@@ -30,7 +30,10 @@ jobs:
         run: aws sts get-caller-identity
 
       - name: install go dependencies
-        run: go mod download
+        run: go mod download || true
+
+      - name: tidy go dependencies
+        run: go mod tidy || true
 
       - name: build
         run: go build -o bin/app main.go
