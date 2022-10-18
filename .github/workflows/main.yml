@@ -29,6 +29,11 @@ jobs:
       - name: aws sts
         run: aws sts get-caller-identity
 
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: install go dependencies
         run: go mod download || true
 
