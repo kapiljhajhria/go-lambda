@@ -38,13 +38,13 @@ jobs:
         run: go mod download || true
 
       - name: build
-        run: go build -o bin/app main.go
+        run: go build -o bin/main main.go
 
       - name: zip
-        run: zip -r app.zip bin
+        run: zip -r main.zip bin/main
 
       - name: upload lambda zip
-        run: aws lambda update-function-code --function-name go-lambda --zip-file fileb://app.zip
+        run: aws lambda update-function-code --function-name go-lambda --zip-file fileb://main.zip
 
 
 
