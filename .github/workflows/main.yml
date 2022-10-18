@@ -1,0 +1,45 @@
+name: deploy to amplify
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read #This is required for actions/checkout@v2
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    env:
+      AWS_DEFAULT_REGION: ap-south-1
+    
+    steps:
+      - name : hello
+        run : echo "hello -worlddddddd"
+
+      - name: configureawscredentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::286506837327:role/GithubActionsOIDC-Role-SH5JWIKJUEDF
+          role-session-name: samplerolesession
+          aws-region: ${{env.AWS_DEFAULT_REGION}}
+
+      - name: aws sts
+        run: aws sts get-caller-identity
+
+      - name: install go dependencies
+        run: go mod download
+
+      - name: build
+        run: go build -o bin/app main.go
+
+      - name: zip
+        run: zip -r app.zip bin
+
+      - name: upload lambda zip
+        run: aws lambda update-function-code --function-name go-lambda --zip-file fileb://app.zip
+
+
+
